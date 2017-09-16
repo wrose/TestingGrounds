@@ -42,5 +42,6 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	class USceneComponent* FP_MuzzleLocation;
 
+    UFUNCTION(BlueprintCallable, Category = "Firing")
     void OnFire();
 };
