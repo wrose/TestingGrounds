@@ -7,6 +7,8 @@ CMakeLists.txt
 TestingGrounds.workspace
 TestingGroundsCodeCompletionFolders.txt
 TestingGroundsCodeLitePreProcessor.txt
+Content/Dynamic/Levels/FirstPersonExampleMap_BuiltData.uasset
+**/*_BuiltData.uasset
 cmake-build-debug
 .idea
 .vs
