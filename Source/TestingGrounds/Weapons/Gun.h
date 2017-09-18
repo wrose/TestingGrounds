@@ -44,4 +44,6 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Firing")
     void OnFire();
+
+    virtual void Tick(float DeltaSeconds) override;
 };

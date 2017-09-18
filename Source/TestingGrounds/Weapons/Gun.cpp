@@ -4,11 +4,12 @@
 #include "Weapons/BallProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/FirstPersonCharacter.h"
 
 // Sets default values
 AGun::AGun() {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-//    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
     // Create a gun mesh component
     FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
     FP_Gun->bCastDynamicShadow = false;
@@ -23,6 +24,13 @@ AGun::AGun() {
 // Called when the game starts or when spawned
 void AGun::BeginPlay() {
     Super::BeginPlay();
+}
+
+void AGun::Tick(float DeltaSeconds) {
+    Super::Tick(DeltaSeconds);
+
+//    auto FPC = Cast<AFirstPersonCharacter>(GetOwner());
+//    auto PlayerController = Cast<APlayerController>(FPC->GetController());
 }
 
 void AGun::OnFire() {
