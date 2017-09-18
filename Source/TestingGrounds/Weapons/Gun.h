@@ -29,10 +29,14 @@ public:
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	class UAnimMontage* FireAnimation1P;
 
+	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimInstance* AnimInstance;
+	class UAnimMontage* FireAnimation3P;
+
+	class UAnimInstance* AnimInstance1P;
+	class UAnimInstance* AnimInstance3P;
 
 	/** Gun mesh: 1st person view (seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
@@ -45,5 +49,5 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Firing")
     void OnFire();
 
-    virtual void Tick(float DeltaSeconds) override;
+//    virtual void Tick(float DeltaSeconds) override;
 };

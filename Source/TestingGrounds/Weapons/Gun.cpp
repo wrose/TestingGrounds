@@ -9,7 +9,7 @@
 // Sets default values
 AGun::AGun() {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-    PrimaryActorTick.bCanEverTick = true;
+//    PrimaryActorTick.bCanEverTick = true;
     // Create a gun mesh component
     FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
     FP_Gun->bCastDynamicShadow = false;
@@ -26,25 +26,23 @@ void AGun::BeginPlay() {
     Super::BeginPlay();
 }
 
-void AGun::Tick(float DeltaSeconds) {
-    Super::Tick(DeltaSeconds);
-
-//    auto FPC = Cast<AFirstPersonCharacter>(GetOwner());
-//    auto PlayerController = Cast<APlayerController>(FPC->GetController());
-}
+//void AGun::Tick(float DeltaSeconds) {
+//    Super::Tick(DeltaSeconds);
+//}
 
 void AGun::OnFire() {
     // try and fire a projectile
     if (ProjectileClass != NULL) {
+
+        // MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+        const FRotator SpawnRotation =
+                FP_MuzzleLocation->GetComponentRotation();
+        const FVector SpawnLocation =
+                FP_MuzzleLocation->GetComponentLocation();
+
         UWorld *const World = GetWorld();
         if (World != NULL) {
             if (!ensure(&FP_MuzzleLocation)) { return; }
-            //const FRotator SpawnRotation = GetControlRotation();
-            // MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-            const FRotator SpawnRotation =
-                    FP_MuzzleLocation->GetComponentRotation();
-            const FVector SpawnLocation =
-                    FP_MuzzleLocation->GetComponentLocation();
 
             //Set Spawn Collision Handling Override
             FActorSpawnParameters ActorSpawnParams;
@@ -67,14 +65,10 @@ void AGun::OnFire() {
     }
 
     // try and play a firing animation if specified
-    if (FireAnimation != NULL) {
-        // Get the animation object for the arms mesh
-        if (AnimInstance != NULL) {
-            AnimInstance->Montage_Play(FireAnimation, 1.f);
-        } else {
-            UE_LOG(LogTemp, Error, TEXT("No AnimInstance Set"))
-        }
-    } else {
-        UE_LOG(LogTemp, Error, TEXT("No FireAnimation Set"))
+    if (FireAnimation1P != NULL && AnimInstance1P != NULL) {
+        AnimInstance1P->Montage_Play(FireAnimation1P, 1.f);
+    }
+    if (FireAnimation3P != NULL && AnimInstance3P != NULL) {
+        AnimInstance1P->Montage_Play(FireAnimation1P, 1.f);
     }
 }

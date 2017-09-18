@@ -36,11 +36,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	FVector GunOffset;
-
-
     /** Gun muzzle's offset from the characters location */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Setup")
     TSubclassOf<class AGun> GunBlueprint = nullptr;

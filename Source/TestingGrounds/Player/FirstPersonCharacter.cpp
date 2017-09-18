@@ -10,7 +10,6 @@
 #include "GameFramework/InputSettings.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "MotionControllerComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -41,8 +40,6 @@ AFirstPersonCharacter::AFirstPersonCharacter()
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
-	// Default offset from the character location for projectiles to spawn
-	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
 void AFirstPersonCharacter::BeginPlay()
@@ -62,7 +59,7 @@ void AFirstPersonCharacter::BeginPlay()
 //			Mesh1P->GetSocketRotation(FName("GripPoint"))
     );
 	Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-    Gun->AnimInstance = Mesh1P->GetAnimInstance();
+    Gun->AnimInstance1P = Mesh1P->GetAnimInstance();
 	if (EnableTouchscreenMovement(InputComponent) == false)
 	{
 		InputComponent->BindAction("Fire", IE_Pressed, Gun, &AGun::OnFire);
