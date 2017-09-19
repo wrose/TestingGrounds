@@ -31,6 +31,7 @@ void AGun::BeginPlay() {
 //}
 
 void AGun::OnFire() {
+    UE_LOG(LogTemp, Warning, TEXT("Fire called"));
     // try and fire a projectile
     if (ProjectileClass != NULL) {
 
