@@ -35,8 +35,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation3P;
 
-	class UAnimInstance* AnimInstance1P;
-	class UAnimInstance* AnimInstance3P;
+	class UAnimInstance* AnimInstance1P = nullptr;
+	class UAnimInstance* AnimInstance3P = nullptr;
 
 	/** Gun mesh: 1st person view (seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)

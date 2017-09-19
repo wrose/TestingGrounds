@@ -69,6 +69,6 @@ void AGun::OnFire() {
         AnimInstance1P->Montage_Play(FireAnimation1P, 1.f);
     }
     if (FireAnimation3P != NULL && AnimInstance3P != NULL) {
-        AnimInstance1P->Montage_Play(FireAnimation1P, 1.f);
+        AnimInstance3P->Montage_Play(FireAnimation3P, 1.f);
     }
 }
