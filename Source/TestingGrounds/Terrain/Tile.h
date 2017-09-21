@@ -29,4 +29,5 @@ public:
 private:
 	FBox BoundsBox;
 
+    bool CastSphere(FVector Location, float Radius);
 };
