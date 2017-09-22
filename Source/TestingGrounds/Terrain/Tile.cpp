@@ -2,6 +2,7 @@
 
 #include "Tile.h"
 #include "Engine/World.h"
+#include "ActorPool.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -62,6 +63,11 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius) {
     auto ResultColor = HasCollision ? FColor::Red : FColor::Green;
 //    DrawDebugCapsule(GetWorld(), GlobalLocation, 0, Radius, FQuat::Identity, ResultColor, true, 100);
     return !HasCollision;
+}
+
+void ATile::SetPool(UActorPool* InPool) {
+    UE_LOG(LogTemp, Warning, TEXT("[%s] Setting Pool %s"), *(this->GetName()), *(InPool->GetName()));
+    Pool = InPool;
 }
 
 // Called when the game starts or when spawned
