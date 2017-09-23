@@ -16,6 +16,28 @@ struct FSpawnPosition
 	float Scale;
 };
 
+USTRUCT(BlueprintType)
+struct FGenerationParameters
+{
+	GENERATED_USTRUCT_BODY()
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generation")
+	int MinSpawn = 1;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generation")
+	int MaxSpawn = 1;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generation")
+	float Radius = 500.f;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generation")
+	float MinScale = 1;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generation")
+	float MaxScale = 1;
+
+};
+
 
 class UActorPool;
 
@@ -41,7 +63,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Generation")
-    void PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn = 1, int MaxSpawn = 1, float Radius = 500.f, float MinScale = 1, float MaxScale = 1);
+	void PlaceActors(TSubclassOf<AActor> ToSpawn, FGenerationParameters GenerationParameters);
+
+	UFUNCTION(BlueprintCallable, Category = "Generation")
+	void PlaceAIPawns(TSubclassOf<APawn> ToSpawn, FGenerationParameters GenerationParameters);
 
 	UFUNCTION(BlueprintCallable, Category = "Pool")
 	void SetPool(UActorPool* Pool);
@@ -60,11 +85,13 @@ private:
 
 	void PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnPosition SpawnPosition);
 
+	void PlaceAIPawn(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition);
+
     bool CanSpawnAtLocation(FVector Location, float Radius);
 
 	bool FindEmptyLocation(FVector &OutLocation, float Radius);
 
-	TArray<FSpawnPosition> GenerateSpawnPositions(int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale);
+	TArray<FSpawnPosition> GenerateSpawnPositions(FGenerationParameters GenerationParameters);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	FVector MinExtent;
