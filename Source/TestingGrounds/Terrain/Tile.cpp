@@ -3,7 +3,7 @@
 #include "Tile.h"
 #include "Engine/World.h"
 #include "ActorPool.h"
-#include "DrawDebugHelpers.h"
+#include "AI/Navigation/NavigationSystem.h"
 
 // Sets default values
 ATile::ATile()
@@ -13,6 +13,8 @@ ATile::ATile()
 
 	MinExtent = FVector(0, -2000, 0);
 	MaxExtent = FVector(4000, 2000, 0);
+	
+	NavigationBoundsOffset = FVector(2000, 0, 0);
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale) {
@@ -82,6 +84,7 @@ void ATile::PositionNavMeshBoundsVolume()
 	}
 	UE_LOG(LogTemp, Error, TEXT("[%s] Retrieved %s from pool."), *GetName(), *NavMeshBoundsVolume->GetName())
 	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
+	GetWorld()->GetNavigationSystem()->Build();
 }
 
 // Called when the game starts or when spawned
