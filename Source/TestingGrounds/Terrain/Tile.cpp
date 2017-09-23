@@ -19,16 +19,25 @@ ATile::ATile()
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale) {
 
+	auto SpawnPositions = GenerateSpawnPositions(MinSpawn, MaxSpawn, Radius, MinScale, MaxScale);
+
+    for (auto SpawnPosition : SpawnPositions) {
+		PlaceActor(ToSpawn, SpawnPosition);
+	}
+}
+
+TArray<FSpawnPosition> ATile::GenerateSpawnPositions(int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale) {
     auto ActorsToSpawn = FMath::RandRange(MinSpawn, MaxSpawn);
 
+	TArray<FSpawnPosition> SpawnPositions;
     for (int i = 0; i < ActorsToSpawn; i++) {
-        FVector SpawnPoint;
-        float Scale = FMath::RandRange(MinScale, MaxScale);
-        if (FindEmptyLocation(SpawnPoint, Radius * Scale)) {
-            float Rotation = FMath::RandRange(-180.f, 180.f);
-            PlaceActor(ToSpawn, SpawnPoint, Rotation, Scale);
-        }
+		FSpawnPosition SpawnPosition;
+        SpawnPosition.Scale = FMath::RandRange(MinScale, MaxScale);
+        SpawnPosition.Rotation = FMath::RandRange(-180.f, 180.f);
+		FindEmptyLocation(SpawnPosition.Location, Radius * SpawnPosition.Scale);
+		SpawnPositions.Add(SpawnPosition);
 	}
+	return SpawnPositions;
 }
 
 bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius) {
@@ -44,11 +53,11 @@ bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius) {
     return false;
 }
 
-void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FVector SpawnPoint, float Rotation, float Scale) {
+void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnPosition SpawnPosition) {
     auto Spawned = GetWorld()->SpawnActor(ToSpawn);
-    Spawned->SetActorRelativeLocation(SpawnPoint);
-    Spawned->SetActorRotation(FRotator(0, Rotation, 0));
-    Spawned->SetActorScale3D(FVector(Scale));
+    Spawned->SetActorRelativeLocation(SpawnPosition.Location);
+    Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation, 0));
+    Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
     Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 }
 
