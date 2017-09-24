@@ -81,17 +81,20 @@ private:
 
     UActorPool* Pool;
 
-    FVector FindEmptyLocation(float Radius);
+	template<class T>
+	void RandomlyPlaceActors(TSubclassOf<T> ToSpawn, FGenerationParameters GenerationParameters);
 
 	void PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnPosition SpawnPosition);
 
-	void PlaceAIPawn(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition);
+	void PlaceActor(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition);
 
     bool CanSpawnAtLocation(FVector Location, float Radius);
 
 	bool FindEmptyLocation(FVector &OutLocation, float Radius);
 
 	TArray<FSpawnPosition> GenerateSpawnPositions(FGenerationParameters GenerationParameters);
+
+	FSpawnPosition GenerateSpawnPosition(FGenerationParameters GenerationParameters);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	FVector MinExtent;
