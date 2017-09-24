@@ -7,8 +7,8 @@
 
 EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory) {
     // Get patrol points
-    auto AIController = OwnerComp.GetAIOwner();
-    auto ControlledPawn = AIController->GetPawn();
+	const auto AIController = OwnerComp.GetAIOwner();
+	const auto ControlledPawn = AIController->GetPawn();
     auto PatrolComponent = ControlledPawn->FindComponentByClass<UPatrolComponent>();
 
     if (!ensure(PatrolComponent)) { return EBTNodeResult::Failed; }
@@ -22,13 +22,12 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent &Own
 
     // Set next waypoint
     auto BlackboardComp = OwnerComp.GetBlackboardComponent();
-    auto Index = BlackboardComp->GetValueAsInt(IndexKey.SelectedKeyName);
+	const auto Index = BlackboardComp->GetValueAsInt(IndexKey.SelectedKeyName);
     BlackboardComp->SetValueAsObject(WaypointKey.SelectedKeyName, PatrolPoints[Index]);
 
     // Cycle to next waypoint
-    auto NextIndex = (Index + 1) % PatrolPoints.Num();
+	const auto NextIndex = (Index + 1) % PatrolPoints.Num();
     BlackboardComp->SetValueAsInt(IndexKey.SelectedKeyName, NextIndex);
 
-//    UE_LOG(LogTemp, Warning, TEXT("Waypoint Index %i"), Index);
     return EBTNodeResult::Succeeded;
 }

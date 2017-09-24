@@ -77,8 +77,6 @@ private:
 
 	int MAX_ATTEMPTS = 100;
 
-	UActorPool* NavMeshPool;
-
     UActorPool* Pool;
 
 	template<class T>
@@ -88,13 +86,13 @@ private:
 
 	void PlaceActor(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition);
 
-    bool CanSpawnAtLocation(FVector Location, float Radius);
+    bool CanSpawnAtLocation(FVector Location, float Radius) const;
 
-	bool FindEmptyLocation(FVector &OutLocation, float Radius);
+	bool FindEmptyLocation(FVector &OutLocation, float Radius) const;
 
-	TArray<FSpawnPosition> GenerateSpawnPositions(FGenerationParameters GenerationParameters);
+	TArray<FSpawnPosition> GenerateSpawnPositions(FGenerationParameters GenerationParameters) const;
 
-	FSpawnPosition GenerateSpawnPosition(FGenerationParameters GenerationParameters);
+	FSpawnPosition GenerateSpawnPosition(FGenerationParameters GenerationParameters) const;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	FVector MinExtent;

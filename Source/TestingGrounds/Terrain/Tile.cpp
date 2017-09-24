@@ -19,27 +19,27 @@ ATile::ATile()
 
 
 template<class T>
-void ATile::RandomlyPlaceActors(TSubclassOf<T> ToSpawn, FGenerationParameters GenerationParameters)
+void ATile::RandomlyPlaceActors(TSubclassOf<T> ToSpawn, const FGenerationParameters GenerationParameters)
 {
-    auto ActorsToSpawn = FMath::RandRange(GenerationParameters.MinSpawn, GenerationParameters.MaxSpawn);
+	const auto ActorsToSpawn = FMath::RandRange(GenerationParameters.MinSpawn, GenerationParameters.MaxSpawn);
 
 	for (size_t i = 0; i < ActorsToSpawn; i++) {
 		PlaceActor(ToSpawn, GenerateSpawnPosition(GenerationParameters));
 	}
 }
 
-void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, FGenerationParameters GenerationParameters) {
+void ATile::PlaceActors(const TSubclassOf<AActor> ToSpawn, const FGenerationParameters GenerationParameters) {
 	RandomlyPlaceActors(ToSpawn, GenerationParameters);
 }
 
-void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, FGenerationParameters GenerationParameters)
+void ATile::PlaceAIPawns(const TSubclassOf<APawn> ToSpawn, const FGenerationParameters GenerationParameters)
 {
 	RandomlyPlaceActors(ToSpawn, GenerationParameters);
 }
 
 
-TArray<FSpawnPosition> ATile::GenerateSpawnPositions(FGenerationParameters GenerationParameters) {
-    auto ActorsToSpawn = FMath::RandRange(GenerationParameters.MinSpawn, GenerationParameters.MaxSpawn);
+TArray<FSpawnPosition> ATile::GenerateSpawnPositions(const FGenerationParameters GenerationParameters) const {
+	const auto ActorsToSpawn = FMath::RandRange(GenerationParameters.MinSpawn, GenerationParameters.MaxSpawn);
 
 	TArray<FSpawnPosition> SpawnPositions;
     for (int i = 0; i < ActorsToSpawn; i++) {
@@ -48,7 +48,7 @@ TArray<FSpawnPosition> ATile::GenerateSpawnPositions(FGenerationParameters Gener
 	return SpawnPositions;
 }
 
-FSpawnPosition ATile::GenerateSpawnPosition(FGenerationParameters GenerationParameters) {
+FSpawnPosition ATile::GenerateSpawnPosition(const FGenerationParameters GenerationParameters) const {
 	FSpawnPosition SpawnPosition;
 	SpawnPosition.Scale = FMath::RandRange(GenerationParameters.MinScale, GenerationParameters.MaxScale);
 	SpawnPosition.Rotation = FMath::RandRange(-180.f, 180.f);
@@ -56,11 +56,11 @@ FSpawnPosition ATile::GenerateSpawnPosition(FGenerationParameters GenerationPara
 	return SpawnPosition;
 }
 
-bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius) {
-    FBox Bounds(MinExtent, MaxExtent);
+bool ATile::FindEmptyLocation(FVector& OutLocation, const float Radius) const {
+	const FBox Bounds(MinExtent, MaxExtent);
 
     for(int i = 0; i < MAX_ATTEMPTS; i++) {
-        auto PossibleLocation = FMath::RandPointInBox(Bounds);
+	    const auto PossibleLocation = FMath::RandPointInBox(Bounds);
         if (CanSpawnAtLocation(PossibleLocation, Radius)) {
             OutLocation = PossibleLocation;
             return true;
@@ -69,7 +69,7 @@ bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius) {
     return false;
 }
 
-void ATile::PlaceActor(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition) {
+void ATile::PlaceActor(const TSubclassOf<APawn> ToSpawn, const FSpawnPosition SpawnPosition) {
 	auto Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
 	if (Spawned) {
 		Spawned->SetActorRelativeLocation(SpawnPosition.Location);
@@ -80,7 +80,7 @@ void ATile::PlaceActor(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition)
 	}
 }
 
-void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnPosition SpawnPosition) {
+void ATile::PlaceActor(const TSubclassOf<AActor> ToSpawn, const FSpawnPosition SpawnPosition) {
     auto Spawned = GetWorld()->SpawnActor(ToSpawn);
 	if (Spawned) {
 		Spawned->SetActorRelativeLocation(SpawnPosition.Location);
@@ -90,10 +90,10 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnPosition SpawnPosition
 	}
 }
 
-bool ATile::CanSpawnAtLocation(FVector Location, float Radius) {
+bool ATile::CanSpawnAtLocation(const FVector Location, const float Radius) const {
     FHitResult HitResult;
-    FVector GlobalLocation = ActorToWorld().TransformPosition(Location);
-    auto HasCollision = GetWorld()->SweepSingleByChannel(
+	const auto GlobalLocation = ActorToWorld().TransformPosition(Location);
+	const auto HasCollision = GetWorld()->SweepSingleByChannel(
                 HitResult,
                 GlobalLocation,
                 GlobalLocation,
@@ -101,13 +101,12 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius) {
                 ECollisionChannel::ECC_GameTraceChannel2, // Spawn channel
                 FCollisionShape::MakeSphere(Radius)
         );
-    auto ResultColor = HasCollision ? FColor::Red : FColor::Green;
+    //auto ResultColor = HasCollision ? FColor::Red : FColor::Green;
 //    DrawDebugCapsule(GetWorld(), GlobalLocation, 0, Radius, FQuat::Identity, ResultColor, true, 100);
     return !HasCollision;
 }
 
 void ATile::SetPool(UActorPool* InPool) {
-    UE_LOG(LogTemp, Warning, TEXT("[%s] Setting Pool %s"), *(this->GetName()), *(InPool->GetName()));
     Pool = InPool;
 
 	PositionNavMeshBoundsVolume();
@@ -116,11 +115,10 @@ void ATile::SetPool(UActorPool* InPool) {
 void ATile::PositionNavMeshBoundsVolume()
 {
 	NavMeshBoundsVolume = Pool->Checkout();
-	if (NavMeshBoundsVolume == NULL) {
+	if (NavMeshBoundsVolume == nullptr) {
 		UE_LOG(LogTemp, Error, TEXT("[%s] Not enough actors in pool."), *GetName())
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("[%s] Retrieved %s from pool."), *GetName(), *NavMeshBoundsVolume->GetName())
 	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
 	GetWorld()->GetNavigationSystem()->Build();
 }
@@ -133,7 +131,6 @@ void ATile::BeginPlay()
 
 void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	UE_LOG(LogTemp, Warning, TEXT("[%s] EndPlay"), *GetName());
 	Pool->Return(NavMeshBoundsVolume);
 	Super::EndPlay(EndPlayReason);
 }

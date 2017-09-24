@@ -25,6 +25,6 @@ protected:
 	class UActorPool* NavMeshBoundsVolumePool;
 
 private:
-	void AddToPool(class ANavMeshBoundsVolume* NavMeshBoundsVolume);
+	void AddToPool(class ANavMeshBoundsVolume* NavMeshBoundsVolume) const;
 
 };
